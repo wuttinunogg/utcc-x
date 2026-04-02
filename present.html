@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTCC X — Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#111318; --ink2:#4a4e5a; --ink3:#9096a4;
+  --bg:#f7f6f3; --surface:#ffffff; --line:#e4e1d8;
+  --gold:#c8932a; --gold-bg:#fdf6e8; --gold-lt:#e8c050;
+  --red:#d94f3a; --red-bg:#fdf0ee;
+  --green:#2a8c5f; --green-bg:#eef8f2;
+  --blue:#2a5cc8; --blue-bg:#eef2fd;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --font:'Sarabun',sans-serif;
+  --serif:'DM Serif Display',serif;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* ── DECK ── */
+#deck{position:relative;width:100%;height:100%}
+.slide{
+  position:absolute;inset:0;opacity:0;pointer-events:none;
+  display:grid;
+}
+.slide.active{opacity:1;pointer-events:all;z-index:2}
+.slide.prev{z-index:1}
+.slide.go-fwd{animation:goFwd .5s var(--ease) forwards}
+.slide.go-back{animation:goBack .5s var(--ease) forwards}
+.slide.out-fwd{animation:outFwd .4s var(--ease) forwards}
+.slide.out-back{animation:outBack .4s var(--ease) forwards}
+@keyframes goFwd {from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
+@keyframes goBack{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:none}}
+@keyframes outFwd{from{opacity:1;transform:none}to{opacity:0;transform:translateX(-40px)}}
+@keyframes outBack{from{opacity:1;transform:none}to{opacity:0;transform:translateX(40px)}}
+
+/* ── LAYOUT ── */
+.two-col{grid-template-columns:380px 1fr}
+.full{grid-template-columns:1fr;place-items:center}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  background:var(--surface);
+  border-right:1px solid var(--line);
+  padding:56px 44px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--gold)}
+.sb-eyebrow{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sb-title{font-family:var(--serif);font-size:clamp(2rem,3.2vw,3rem);line-height:1.1;color:var(--ink);margin-bottom:18px}
+.sb-body{font-size:16px;color:var(--ink2);line-height:1.75}
+.sb-pills{display:flex;flex-direction:column;gap:10px}
+.pill{
+  display:flex;align-items:center;gap:14px;
+  background:var(--gold-bg);border:1px solid rgba(200,147,42,.2);
+  border-radius:100px;padding:12px 20px;width:fit-content;
+}
+.pill .pn{font-size:1.3rem;font-weight:900;color:var(--gold);line-height:1}
+.pill .pl{font-size:13px;color:var(--ink2)}
+
+/* ── MAIN ── */
+.main{
+  padding:56px 56px 80px;
+  overflow-y:auto;display:flex;flex-direction:column;
+  background:var(--bg);
+  scrollbar-width:thin;scrollbar-color:var(--line) transparent;
+}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.section-title{font-family:var(--serif);font-size:clamp(1.8rem,2.8vw,2.6rem);line-height:1.15;color:var(--ink);margin-bottom:8px}
+.rule{width:44px;height:3px;background:var(--gold);margin:14px 0 26px;border-radius:2px}
+
+/* ── CARDS ── */
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  padding:26px 28px;transition:border-color .2s,box-shadow .2s,transform .2s;
+}
+.card:hover{border-color:rgba(200,147,42,.35);box-shadow:0 4px 24px rgba(0,0,0,.07);transform:translateY(-2px)}
+.card-icon{font-size:1.6rem;margin-bottom:10px;display:block}
+.card-title{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.card-body{font-size:14px;color:var(--ink2);line-height:1.65}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+/* ── PROBLEM ROWS ── */
+.prob-row{
+  display:flex;align-items:center;gap:18px;padding:18px 22px;
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  cursor:default;transition:all .2s;position:relative;overflow:hidden;margin-bottom:10px;
+}
+.prob-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--red);transform:scaleY(0);transform-origin:bottom;transition:transform .25s}
+.prob-row:hover{border-color:rgba(217,79,58,.25);background:#fffaf9}
+.prob-row:hover::before{transform:scaleY(1)}
+.prob-icon{font-size:1.6rem;flex-shrink:0}
+.prob-title{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.prob-body{font-size:13.5px;color:var(--ink2);line-height:1.5}
+.prob-tag{margin-left:auto;font-size:11px;font-weight:800;padding:5px 14px;border-radius:100px;background:var(--red-bg);color:var(--red);flex-shrink:0}
+.prob-tag.mid{background:var(--gold-bg);color:var(--gold)}
+
+/* ── PHASE TABS ── */
+.phase-nav{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:4px;width:fit-content;margin-bottom:24px}
+.ph-btn{padding:9px 22px;border-radius:100px;font-family:var(--font);font-size:13px;font-weight:700;border:none;cursor:pointer;background:transparent;color:var(--ink2);transition:all .2s;letter-spacing:.03em}
+.ph-btn.on{background:var(--ink);color:#fff}
+.ph-content{display:none;animation:fadeUp .3s var(--ease)}
+.ph-content.on{display:grid;grid-template-columns:1.2fr 1fr;gap:24px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ph-dur{font-size:12px;font-weight:700;letter-spacing:.15em;color:var(--gold);margin-bottom:6px;text-transform:uppercase}
+.ph-title{font-family:var(--serif);font-size:1.6rem;margin-bottom:14px}
+.step-list{display:flex;flex-direction:column;gap:9px}
+.step-item{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:10px;transition:border-color .2s}
+.step-item:hover{border-color:rgba(200,147,42,.3)}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--gold-bg);border:1.5px solid rgba(200,147,42,.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--gold);flex-shrink:0;margin-top:1px}
+.step-txt{font-size:14px;color:var(--ink2);line-height:1.6}
+.step-txt strong{color:var(--ink);display:block;font-size:14px;margin-bottom:2px}
+.ph-stats{display:flex;flex-direction:column;gap:12px;justify-content:center}
+.ph-stat{padding:20px 22px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.ph-stat .psv{font-family:var(--serif);font-size:2rem;color:var(--gold)}
+.ph-stat .psl{font-size:12px;color:var(--ink3);margin-top:2px}
+.tl-bar{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:18px}
+.tl-seg{flex:1;padding:12px 16px;border-right:1px solid var(--line);cursor:pointer;transition:background .2s}
+.tl-seg:last-child{border-right:none}
+.tl-seg.tl-on{background:var(--gold-bg)}
+.tl-seg.tl-on::after{content:'';display:block;height:2px;background:var(--gold);margin-top:6px;border-radius:1px}
+.tl-lbl{font-size:10px;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase}
+.tl-seg.tl-on .tl-lbl{color:var(--gold)}
+.tl-name{font-size:13px;font-weight:700;color:var(--ink);margin-top:2px}
+
+/* ── KIOSK ── */
+.kiosk-device{
+  background:var(--surface);border:1.5px solid var(--line);border-radius:20px;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,.08);
+}
+.kd-hdr{background:var(--ink);padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.kd-brand{font-size:14px;font-weight:900;color:var(--gold);letter-spacing:.1em}
+.kd-status{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.4)}
+.online-dot{width:7px;height:7px;border-radius:50%;background:#4cdf88;animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.kd-body{flex:1;padding:14px;overflow-y:auto;scrollbar-width:thin}
+.kd-greet{text-align:center;padding:8px 0 12px;font-size:13px;color:var(--ink2);line-height:1.6}
+.kd-greet strong{display:block;font-size:15px;color:var(--ink);font-weight:800;margin-bottom:2px}
+.kd-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.kd-tile{padding:12px 8px;background:var(--bg);border:1px solid var(--line);border-radius:10px;text-align:center;cursor:pointer;font-family:var(--font);font-size:12px;color:var(--ink);font-weight:600;transition:all .2s}
+.kd-tile:hover,.kd-tile.sel{background:var(--gold-bg);border-color:rgba(200,147,42,.4);color:var(--gold)}
+.kd-tile .ki{font-size:1.4rem;display:block;margin-bottom:3px}
+.kd-result{background:var(--gold-bg);border:1px solid rgba(200,147,42,.2);border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--ink2);display:none;margin-bottom:6px}
+.kd-result.show{display:block;animation:fadeUp .25s var(--ease)}
+.kd-result h4{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.kd-foot{padding:10px 12px;border-top:1px solid var(--line);display:flex;gap:8px;background:var(--surface)}
+.kd-inp{flex:1;border:1px solid var(--line);border-radius:100px;padding:8px 14px;font-family:var(--font);font-size:12.5px;color:var(--ink);background:var(--bg);outline:none;transition:border-color .2s}
+.kd-inp:focus{border-color:var(--gold)}
+.kd-send{width:32px;height:32px;border-radius:50%;border:none;background:var(--ink);color:#fff;font-size:13px;cursor:pointer;flex-shrink:0;transition:background .2s;display:flex;align-items:center;justify-content:center}
+.kd-send:hover{background:var(--gold)}
+
+/* ── CHAT ── */
+.chat-win{background:var(--surface);border:1.5px solid var(--line);border-radius:20px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.08)}
+.cw-hdr{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.cw-av{width:36px;height:36px;background:var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:900;color:var(--gold);flex-shrink:0}
+.cw-name{font-size:14px;font-weight:800;color:var(--ink)}
+.cw-stat{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px}
+.cw-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin}
+.msg-row{display:flex;gap:8px;align-items:flex-end}
+.msg-row.user{flex-direction:row-reverse}
+.bubble{max-width:82%;padding:11px 15px;border-radius:14px;font-size:13.5px;line-height:1.65;animation:fadeUp .25s var(--ease)}
+.bubble.bot{background:var(--bg);border:1px solid var(--line);border-bottom-left-radius:4px;color:var(--ink)}
+.bubble.user-b{background:var(--ink);color:#fff;border-bottom-right-radius:4px}
+.typing span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--ink3);margin:0 2px;animation:tdot 1.2s ease infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.qchips{padding:8px 14px 6px;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--line);background:var(--bg)}
+.qc{padding:6px 13px;border-radius:100px;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-family:var(--font);color:var(--ink2);transition:all .18s}
+.qc:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-bg)}
+.ci-row{padding:10px 12px;border-top:1px solid var(--line);display:flex;gap:8px}
+.ci{flex:1;border:1px solid var(--line);border-radius:100px;padding:9px 16px;font-family:var(--font);font-size:13px;color:var(--ink);outline:none;background:var(--bg);transition:border-color .2s}
+.ci:focus{border-color:var(--gold)}
+.ci-btn{width:34px;height:34px;border-radius:50%;border:none;background:var(--ink);color:#fff;font-size:13px;cursor:pointer;flex-shrink:0;transition:background .2s;display:flex;align-items:center;justify-content:center}
+.ci-btn:hover{background:var(--gold)}
+
+/* ── DASHBOARD ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;transition:border-color .2s}
+.kpi:hover{border-color:rgba(200,147,42,.3)}
+.kpi .kv{font-family:var(--serif);font-size:2rem;color:var(--ink);line-height:1}
+.kpi .kl{font-size:12px;color:var(--ink3);margin-top:5px}
+.kpi .kdelta{font-size:12px;font-weight:700;margin-top:6px;color:var(--green)}
+.kpi.c-gold .kv{color:var(--gold)}.kpi.c-green .kv{color:var(--green)}.kpi.c-blue .kv{color:var(--blue)}.kpi.c-red .kv{color:var(--red)}
+.dash-row{display:grid;grid-template-columns:1.3fr 1fr;gap:14px}
+.dash-block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.db-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-bottom:16px}
+.bar-group{display:flex;align-items:flex-end;gap:10px;height:110px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.bar-fill{width:100%;background:var(--ink);border-radius:4px 4px 0 0;min-height:4px;position:relative;transition:opacity .2s;cursor:pointer}
+.bar-fill:hover{opacity:.7}
+.bar-fill .btip{position:absolute;bottom:calc(100%+4px);left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:4px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+.bar-fill:hover .btip{opacity:1}
+.bar-lbl{font-size:10px;color:var(--ink3)}
+.faq-item{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.faq-item:last-child{margin-bottom:0}
+.fq-rk{font-size:11px;font-weight:900;color:var(--ink3);width:14px;flex-shrink:0}
+.fq-lbl{font-size:13px;color:var(--ink2);width:140px;flex-shrink:0}
+.fq-track{flex:1;height:7px;background:var(--bg);border-radius:100px;overflow:hidden}
+.fq-fill{height:100%;background:var(--gold);border-radius:100px;width:0%;transition:width 1.2s var(--ease)}
+.fq-pct{font-size:11px;font-weight:700;color:var(--gold);width:30px;text-align:right;flex-shrink:0}
+
+/* ── BUDGET ── */
+.cost-tbl{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.tbl-hdr{display:grid;grid-template-columns:1fr 90px 95px 90px;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--line);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.tbl-row{display:grid;grid-template-columns:1fr 90px 95px 90px;padding:12px 16px;border-bottom:1px solid var(--line);align-items:center;transition:background .15s}
+.tbl-row:last-child{border-bottom:none}
+.tbl-row:hover{background:var(--gold-bg)}
+.tbl-row.free-row{background:#f0faf5}
+.tr-name{font-size:13px;color:var(--ink2)}
+.tr-name.free-name{color:var(--green);font-weight:700}
+.tr-qty{font-size:12px;color:var(--ink3);text-align:right}
+.tr-unit{font-size:12.5px;color:var(--ink3);text-align:right}
+.tr-unit.free{color:var(--green);font-weight:700}
+.tr-total{font-size:13px;font-weight:800;color:var(--ink);text-align:right}
+.tr-total.free{color:var(--green)}
+.tbl-foot{display:grid;grid-template-columns:1fr 90px 95px 90px;padding:13px 16px;background:var(--gold-bg);border-top:2px solid var(--line)}
+.sliders-box{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.sl-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-bottom:16px}
+.sl-row{margin-bottom:16px}
+.sl-row:last-child{margin-bottom:0}
+.sl-label{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);font-weight:600;margin-bottom:7px}
+.sl-val{color:var(--gold);font-weight:800}
+.sl{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:100px;background:var(--line);outline:none;cursor:pointer;accent-color:var(--gold)}
+.sl::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 1px 5px rgba(200,147,42,.4);border:2.5px solid white}
+.roi-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
+.roi-line{display:flex;justify-content:space-between;align-items:center}
+.rl-lbl{font-size:13.5px;color:var(--ink2)}
+.rl-lbl.bold{font-weight:800;color:var(--ink)}
+.rl-val{font-size:14px;font-weight:800;color:var(--ink)}
+.rl-val.gold{color:var(--gold)}.rl-val.green{color:var(--green)}
+.rl-val.big{font-size:1.2rem}
+.divider-thin{height:1px;background:var(--line)}
+.pb-label{display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:6px}
+.pb-track{height:9px;background:var(--bg);border-radius:100px;overflow:hidden;border:1px solid var(--line)}
+.pb-fill{height:100%;border-radius:100px;background:var(--gold);transition:width .6s var(--ease)}
+.pb-ticks{display:flex;justify-content:space-between;font-size:9px;color:var(--ink3);margin-top:3px}
+
+/* ── SUCCESS ── */
+.sc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.sc-card{padding:26px 22px;background:var(--surface);border:1px solid var(--line);border-radius:16px;transition:all .25s;cursor:default;position:relative;overflow:hidden}
+.sc-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.sc-card:hover{border-color:rgba(42,140,95,.3);transform:translateY(-4px);box-shadow:0 6px 28px rgba(0,0,0,.08)}
+.sc-card:hover::after{transform:scaleX(1)}
+.sc-icon{font-size:1.8rem;margin-bottom:12px}
+.sc-title{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.sc-body{font-size:13.5px;color:var(--ink2);line-height:1.65}
+
+/* ── HERO ── */
+#s0{background:var(--surface)}
+.hero-sup{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:100px;padding:7px 20px;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink2);margin-bottom:28px}
+.hero-sup::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.hero-title{font-family:var(--serif);font-size:clamp(5.5rem,11vw,9rem);line-height:.92;color:var(--ink);margin-bottom:12px}
+.hero-title .hx{color:var(--gold);font-style:italic}
+.hero-tag{font-size:clamp(1.05rem,1.8vw,1.35rem);color:var(--ink2);line-height:1.75;max-width:520px;margin:0 auto 36px}
+.hero-tag strong{color:var(--ink)}
+.hero-stats{display:flex;gap:0;border-top:1px solid var(--line);padding-top:28px;max-width:520px;width:100%}
+.hs-item{flex:1;text-align:center}
+.hs-item+.hs-item{border-left:1px solid var(--line)}
+.hs-num{font-family:var(--serif);font-size:2.2rem;color:var(--ink)}
+.hs-lbl{font-size:12px;color:var(--ink3);margin-top:3px;letter-spacing:.05em}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  z-index:100;display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.9);backdrop-filter:blur(12px);
+  border:1px solid var(--line);border-radius:100px;
+  padding:8px 18px;box-shadow:0 4px 20px rgba(0,0,0,.1);
+}
+.nd{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer;transition:all .25s}
+.nd.on{background:var(--gold);transform:scale(1.3)}
+.nd:hover:not(.on){background:var(--ink3)}
+.nav-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:transparent;cursor:pointer;font-size:12px;color:var(--ink2);display:flex;align-items:center;justify-content:center;transition:all .18s;font-family:var(--font)}
+.nav-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+#nav-ctr{font-size:11px;color:var(--ink3);letter-spacing:.08em;margin:0 4px;min-width:34px;text-align:center}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;top:0;left:0;height:3px;background:var(--gold);z-index:200;transition:width .4s var(--ease);pointer-events:none}
+
+/* ── WORDMARK ── */
+#wm{position:fixed;top:22px;left:28px;z-index:100;font-family:var(--serif);font-size:1rem;color:var(--ink);pointer-events:none}
+#wm span{color:var(--gold);font-style:italic}
+
+/* ── STAGGER ── */
+.stagger>*{opacity:0;transform:translateY(16px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.active .stagger>*{opacity:1;transform:none}
+.active .stagger>*:nth-child(1){transition-delay:.07s}
+.active .stagger>*:nth-child(2){transition-delay:.13s}
+.active .stagger>*:nth-child(3){transition-delay:.19s}
+.active .stagger>*:nth-child(4){transition-delay:.25s}
+.active .stagger>*:nth-child(5){transition-delay:.31s}
+.active .stagger>*:nth-child(6){transition-delay:.37s}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+<div id="wm">UTCC <span>X</span></div>
+
+<div id="deck">
+
+<!-- ══ 0: HERO ══ -->
+<div class="slide full active" id="s0">
+  <div style="text-align:center">
+    <div class="hero-sup">มหาวิทยาลัยหอการค้าไทย · 2026–2028</div>
+    <div class="hero-title">UTCC <span class="hx">X</span></div>
+    <p class="hero-tag">ประสบการณ์ดีๆ ที่ <strong>ทวีคูณ</strong><br>พลิกโฉมระบบบริการมหาวิทยาลัยสู่ยุคดิจิทัล</p>
+    <div class="hero-stats stagger">
+      <div class="hs-item"><div class="hs-num">3</div><div class="hs-lbl">ระยะดำเนินการ</div></div>
+      <div class="hs-item"><div class="hs-num">24</div><div class="hs-lbl">เดือนสู่เป้าหมาย</div></div>
+      <div class="hs-item"><div class="hs-num">X²</div><div class="hs-lbl">ประสบการณ์ทวีคูณ</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 1: PROBLEM ══ -->
+<div class="slide two-col" id="s1">
+  <div class="sidebar">
+    <div>
+      <div class="sb-eyebrow">Step 01 · ปัญหา</div>
+      <div class="sb-title">ทำไมต้อง<br>เปลี่ยนแปลง?</div>
+      <p class="sb-body">ผู้มาติดต่อมหาวิทยาลัยประสบปัญหาทุกวัน ขาดข้อมูลกลาง ประสานงานซับซ้อน ประสบการณ์ไม่สม่ำเสมอ</p>
+    </div>
+    <div class="sb-pills">
+      <div style="font-size:11px;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">ประมาณการ / ปี</div>
+      <div style="font-family:var(--serif);font-size:3.5rem;color:var(--red);line-height:1" id="cnt">—</div>
+      <div style="font-size:14px;color:var(--ink2);margin-top:4px">รายการร้องเรียนสะสม</div>
+      <button onclick="runCnt()" style="margin-top:14px;padding:11px 24px;background:var(--red);color:#fff;border:none;border-radius:100px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;width:fit-content;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">▶ แสดงตัวเลข</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="eyebrow">ปัญหาหลัก 4 ด้าน</div>
+    <div class="section-title">อุปสรรคที่ต้องแก้ไข</div>
+    <div class="rule"></div>
+    <div class="stagger">
+      <div class="prob-row"><div class="prob-icon">🔍</div><div><div class="prob-title">ขาดช่องทางข้อมูลกลาง</div><div class="prob-body">ไม่มีจุดรับข้อมูลเดียว ผู้ติดต่อไม่ทราบว่าต้องไปหน่วยงานใดก่อน</div></div><div class="prob-tag">สูง</div></div>
+      <div class="prob-row"><div class="prob-icon">🔄</div><div><div class="prob-title">ต้องประสานงานหลายหน่วยงาน</div><div class="prob-body">เรื่องเดียวต้องวิ่งหลายจุด เสียเวลาและทรัพยากรโดยไม่จำเป็น</div></div><div class="prob-tag">สูง</div></div>
+      <div class="prob-row"><div class="prob-icon">⚡</div><div><div class="prob-title">ข้อมูลขัดแย้งระหว่างหน่วยงาน</div><div class="prob-body">แต่ละจุดบริการให้คำตอบต่างกัน สร้างความสับสนแก่ผู้ใช้บริการ</div></div><div class="prob-tag mid">กลาง</div></div>
+      <div class="prob-row"><div class="prob-icon">⏳</div><div><div class="prob-title">ประสบการณ์โดยรวมไม่ดีพอ</div><div class="prob-body">ความล่าช้าและสับสนลดภาพลักษณ์และความน่าเชื่อถือของมหาวิทยาลัย</div></div><div class="prob-tag mid">กลาง</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 2: PROJECT ══ -->
+<div class="slide two-col" id="s2">
+  <div class="sidebar">
+    <div>
+      <div class="sb-eyebrow">Step 02–03 · โครงการ</div>
+      <div class="sb-title">UTCC X คืออะไร?</div>
+      <p class="sb-body">แนวคิดยกระดับและพลิกโฉมระบบบริการมหาวิทยาลัย สร้างประสบการณ์ที่สะดวก รวดเร็ว เป็นมาตรฐาน และทวีคูณ</p>
+    </div>
+    <div class="sb-pills">
+      <div class="pill"><div class="pn">4</div><div class="pl">ประโยชน์หลักที่จะได้รับ</div></div>
+      <div class="pill"><div class="pn">One Stop</div><div class="pl">ทิศทางสู่ Digital University</div></div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="eyebrow">ประโยชน์ที่ได้รับ</div>
+    <div class="section-title">4 เหตุผลที่ UTCC X สร้างคุณค่าทวีคูณ</div>
+    <div class="rule"></div>
+    <div class="g2 stagger">
+      <div class="card"><span class="card-icon">✨</span><div class="card-title">ยกระดับ Service Experience</div><div class="card-body">นักศึกษาและบุคคลภายนอกเข้าถึงข้อมูลได้อย่างสะดวก รวดเร็ว ชัดเจน</div></div>
+      <div class="card"><span class="card-icon">🏛️</span><div class="card-title">เสริมสร้างภาพลักษณ์</div><div class="card-body">สะท้อนการบริหารที่ทันสมัย เป็นระบบ และใส่ใจผู้รับบริการทุกคน</div></div>
+      <div class="card"><span class="card-icon">⚙️</span><div class="card-title">เพิ่มประสิทธิภาพภายใน</div><div class="card-body">ลดความซ้ำซ้อน ลดภาระประสานงาน ข้อมูลมาตรฐานเดียวกันทั้งองค์กร</div></div>
+      <div class="card"><span class="card-icon">🚀</span><div class="card-title">One Stop Service · Digital</div><div class="card-body">โอกาสยกระดับการแข่งขันและพัฒนาสู่ Digital University ระยะยาว</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 3: ROADMAP ══ -->
+<div class="slide two-col" id="s3">
+  <div class="sidebar">
+    <div>
+      <div class="sb-eyebrow">Step 04 · แผนงาน</div>
+      <div class="sb-title">3 ระยะ<br>24 เดือน</div>
+      <p class="sb-body">แผนดำเนินการที่เป็นขั้นตอน สร้างรากฐานมั่นคงก่อน จึงยกระดับด้วย AI และวิเคราะห์ข้อมูล</p>
+    </div>
+    <div class="sb-pills">
+      <div class="pill"><div class="pn">6</div><div class="pl">เดือน · ระยะที่ 1</div></div>
+      <div class="pill"><div class="pn">6</div><div class="pl">เดือน · ระยะที่ 2</div></div>
+      <div class="pill"><div class="pn">12</div><div class="pl">เดือน · ระยะที่ 3</div></div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="eyebrow">แผนดำเนินการ</div>
+    <div class="section-title">เลือกระยะเพื่อดูรายละเอียด</div>
+    <div class="rule"></div>
+    <div class="phase-nav">
+      <button class="ph-btn on" onclick="setPhase(0,this)">ระยะ 1 · Foundation</button>
+      <button class="ph-btn" onclick="setPhase(1,this)">ระยะ 2 · AI</button>
+      <button class="ph-btn" onclick="setPhase(2,this)">ระยะ 3 · Analytics</button>
+    </div>
+    <div class="ph-content on" id="ph0">
+      <div>
+        <div class="ph-dur">6 เดือน · Foundation</div>
+        <div class="ph-title">Smart Service Foundation</div>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num">1</div><div class="step-txt"><strong>มาตรฐานการให้บริการ</strong>กำหนด Service Script และ Protocol ทั้งมหาวิทยาลัย</div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-txt"><strong>อบรมบุคลากร</strong>ทักษะ Hospitality Service, สื่อสาร, Complaint Handling</div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-txt"><strong>ฐานข้อมูลกลาง</strong>Service Information Hub ครอบคลุมทุกหน่วยงาน</div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-txt"><strong>Digital Kiosk รุ่นแรก</strong>แผนที่, FAQ, สมัครเรียน, ติดต่อหน่วยงาน</div></div>
+          <div class="step-item"><div class="step-num">5</div><div class="step-txt"><strong>Referral System</strong>ระบบส่งต่อมาตรฐาน ตรวจสอบได้</div></div>
+        </div>
+      </div>
+      <div class="ph-stats">
+        <div class="ph-stat"><div class="psv">6 mo.</div><div class="psl">ระยะเวลาดำเนินการ</div></div>
+        <div class="ph-stat"><div class="psv">5</div><div class="psl">มาตรการหลัก</div></div>
+        <div class="ph-stat"><div class="psv">100%</div><div class="psl">ครอบคลุมทุกหน่วยงาน</div></div>
+      </div>
+    </div>
+    <div class="ph-content" id="ph1">
+      <div>
+        <div class="ph-dur">6 เดือน · AI Integration</div>
+        <div class="ph-title">AI Smart Service</div>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num">1</div><div class="step-txt"><strong>AI Knowledge Base</strong>นำข้อมูล Phase 1 มาสร้างฐานความรู้ AI</div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-txt"><strong>JAR-ViS AI Chat</strong>Text + Voice Interaction + เมนูสำเร็จรูปอัจฉริยะ</div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-txt"><strong>Smart Navigation</strong>แผนที่อาคาร แนะนำเส้นทาง QR Code ส่งมือถือ</div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-txt"><strong>Auto-Escalation</strong>AI ส่งต่อเจ้าหน้าที่อัตโนมัติพร้อมบริบทสนทนา</div></div>
+          <div class="step-item"><div class="step-num">5</div><div class="step-txt"><strong>เป้าหมาย</strong>AI Resolution Rate 88% ลดภาระเจ้าหน้าที่</div></div>
+        </div>
+      </div>
+      <div class="ph-stats">
+        <div class="ph-stat"><div class="psv">JAR-ViS</div><div class="psl">AI Engine</div></div>
+        <div class="ph-stat"><div class="psv">3</div><div class="psl">ช่องทางสื่อสาร</div></div>
+        <div class="ph-stat"><div class="psv">88%</div><div class="psl">AI Resolution Rate (เป้า)</div></div>
+      </div>
+    </div>
+    <div class="ph-content" id="ph2">
+      <div>
+        <div class="ph-dur">12 เดือน · Analytics</div>
+        <div class="ph-title">Smart Service Analytics</div>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num">1</div><div class="step-txt"><strong>Service KPIs</strong>กำหนดตัวชี้วัดครอบคลุมทุกมิติ ติดตามอัตโนมัติ</div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-txt"><strong>Service Data Platform</strong>รวบรวมข้อมูลจากทุกช่องทางสู่ฐานข้อมูลเดียว</div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-txt"><strong>Data Classification</strong>จัดหมวดหมู่เพื่อวิเคราะห์ประเภทความต้องการ</div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-txt"><strong>Executive Dashboard</strong>Real-Time — ผู้บริหารเห็นภาพรวมได้ทันที</div></div>
+          <div class="step-item"><div class="step-num">5</div><div class="step-txt"><strong>Continuous Improvement</strong>พัฒนาบริการต่อเนื่องจากข้อมูลจริง</div></div>
+        </div>
+      </div>
+      <div class="ph-stats">
+        <div class="ph-stat"><div class="psv">Real-Time</div><div class="psl">Dashboard ผู้บริหาร</div></div>
+        <div class="ph-stat"><div class="psv">5+</div><div class="psl">KPIs ติดตาม</div></div>
+        <div class="ph-stat"><div class="psv">360°</div><div class="psl">มุมมองการบริการ</div></div>
+      </div>
+    </div>
+    <div class="tl-bar">
+      <div class="tl-seg tl-on" onclick="setPhase(0,null);tlOn(0)"><div class="tl-lbl">เดือน 1–6</div><div class="tl-name">Foundation</div></div>
+      <div class="tl-seg" onclick="setPhase(1,null);tlOn(1)"><div class="tl-lbl">เดือน 7–12</div><div class="tl-name">AI Integration</div></div>
+      <div class="tl-seg" onclick="setPhase(2,null);tlOn(2)"><div class="tl-lbl">เดือน 13–24</div><div class="tl-name">Analytics</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4: KIOSK ══ -->
+<div class="slide two-col" id="s4">
+  <div class="sidebar">
+    <div>
+      <div class="sb-eyebrow">ระยะที่ 1 · Kiosk</div>
+      <div class="sb-title">Smart<br>Information<br>Kiosk</div>
+      <p class="sb-body">ตู้บริการอัจฉริยะที่ช่วยให้ผู้มาติดต่อเข้าถึงข้อมูลได้ด้วยตนเอง ลดภาระเจ้าหน้าที่</p>
+    </div>
+    <div class="sb-pills">
+      <div class="pill"><div class="pn">6</div><div class="pl">ฟังก์ชันหลัก</div></div>
+      <div class="pill"><div class="pn">3s</div><div class="pl">เวลาตอบสนองเฉลี่ย</div></div>
+      <div style="font-size:13px;color:var(--ink3);margin-top:4px">👆 กดปุ่มบน Kiosk หรือพิมพ์ถามได้</div>
+    </div>
+  </div>
+  <div class="main" style="justify-content:center;overflow-y:auto">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;max-width:780px;width:100%">
+      <div class="kiosk-device">
+        <div class="kd-hdr"><div class="kd-brand">UTCC X</div><div class="kd-status"><div class="online-dot"></div>Online</div></div>
+        <div class="kd-body" id="kdb">
+          <div class="kd-greet"><strong>ยินดีต้อนรับสู่ UTCC</strong>กรุณาเลือกบริการ</div>
+          <div class="kd-grid">
+            <div class="kd-tile" onclick="kSel('map',this)"><span class="ki">🗺️</span>แผนที่</div>
+            <div class="kd-tile" onclick="kSel('enroll',this)"><span class="ki">📚</span>สมัครเรียน</div>
+            <div class="kd-tile" onclick="kSel('contact',this)"><span class="ki">📞</span>ติดต่อ</div>
+            <div class="kd-tile" onclick="kSel('faq',this)"><span class="ki">❓</span>FAQ</div>
+            <div class="kd-tile" onclick="kSel('student',this)"><span class="ki">🎓</span>นักศึกษา</div>
+            <div class="kd-tile" onclick="kSel('online',this)"><span class="ki">🌐</span>ออนไลน์</div>
+          </div>
+          <div class="kd-result" id="kdr"></div>
+        </div>
+        <div class="kd-foot">
+          <input class="kd-inp" id="kdi" placeholder="พิมพ์คำถาม..." onkeydown="if(event.key==='Enter')kChat()">
+          <button class="kd-send" onclick="kChat()">→</button>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:10px">ฟีเจอร์หลัก</div>
+        <div class="step-list" style="gap:7px">
+          <div class="step-item" style="padding:11px 14px"><div class="step-num" style="font-size:10px">01</div><div class="step-txt" style="font-size:13px"><strong>แผนที่นำทาง</strong>ค้นหาอาคารและห้อง</div></div>
+          <div class="step-item" style="padding:11px 14px"><div class="step-num" style="font-size:10px">02</div><div class="step-txt" style="font-size:13px"><strong>ข้อมูลสมัครเรียน</strong>รอบ, คณะ, ค่าเทอม</div></div>
+          <div class="step-item" style="padding:11px 14px"><div class="step-num" style="font-size:10px">03</div><div class="step-txt" style="font-size:13px"><strong>ติดต่อหน่วยงาน</strong>เบอร์โทร, LINE, อีเมล</div></div>
+          <div class="step-item" style="padding:11px 14px"><div class="step-num" style="font-size:10px">04</div><div class="step-txt" style="font-size:13px"><strong>FAQ อัตโนมัติ</strong>500+ คำถามพบบ่อย</div></div>
+          <div class="step-item" style="padding:11px 14px"><div class="step-num" style="font-size:10px">05</div><div class="step-txt" style="font-size:13px"><strong>บริการนักศึกษา</strong>ทุน, กิจกรรม, Career</div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <div style="flex:1;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:13px"><div style="font-size:1.4rem;font-weight:900;color:var(--gold)" id="ks1">—</div><div style="font-size:11px;color:var(--ink3);margin-top:3px">Users/day</div></div>
+          <div style="flex:1;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:13px"><div style="font-size:1.4rem;font-weight:900;color:var(--gold)" id="ks2">—</div><div style="font-size:11px;color:var(--ink3);margin-top:3px">Satisfaction</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 5: AI ══ -->
+<div class="slide two-col" id="s5">
+  <div class="sidebar">
+    <div>
+      <div class="sb-eyebrow">ระยะที่ 2 · AI</div>
+      <div class="sb-title">JAR-ViS<br>AI<br>Assistant</div>
+      <p class="sb-body">ผู้ช่วย AI อัจฉริยะที่เข้าใจภาษาธรรมชาติ ตอบได้ทันที ส่งต่อเจ้าหน้าที่อัตโนมัติ</p>
+    </div>
+    <div class="sb-pills">
+      <div class="pill"><div class="pn">88%</div><div class="pl">AI Resolution Rate (เป้า)</div></div>
+      <div class="pill"><div class="pn">3</div><div class="pl">วิธีสื่อสาร: พิมพ์/พูด/เมนู</div></div>
+      <div style="font-size:13px;color:var(--ink3);margin-top:4px">💬 ลองพิมพ์: "อยากเรียน MBA"</div>
+    </div>
+  </div>
+  <div class="main" style="justify-content:center;overflow-y:auto">
+    <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start;max-width:780px;width:100%">
+      <div class="chat-win" style="height:400px">
+        <div class="cw-hdr">
+          <div class="cw-av">J</div>
+          <div><div class="cw-name">JAR-ViS</div><div class="cw-stat"><div class="online-dot"></div>พร้อมให้บริการ</div></div>
+        </div>
+        <div class="cw-msgs" id="cwm">
+          <div class="msg-row"><div class="bubble bot">สวัสดีครับ! ผม JAR-ViS ผู้ช่วย AI ของ UTCC 🎓<br>ต้องการทราบข้อมูลอะไรครับ?</div></div>
+        </div>
+        <div class="qchips">
+          <span class="qc" onclick="aiQ('สมัครเรียน')">สมัครเรียน</span>
+          <span class="qc" onclick="aiQ('ค่าเทอม')">ค่าเทอม</span>
+          <span class="qc" onclick="aiQ('ทุนการศึกษา')">ทุนการศึกษา</span>
+          <span class="qc" onclick="aiQ('ห้องสมุด')">ห้องสมุด</span>
+          <span class="qc" onclick="aiQ('ลืมรหัส')">ลืมรหัส</span>
+        </div>
+        <div class="ci-row">
+          <input class="ci" id="ci" placeholder="พิมพ์คำถาม..." onkeydown="if(event.key==='Enter')aiSend()">
+          <button class="ci-btn" onclick="aiSend()">→</button>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:10px">ความสามารถ</div>
+        <div class="step-list" style="gap:7px">
+          <div class="step-item" style="padding:12px 14px"><div class="step-num">🤖</div><div class="step-txt" style="font-size:13px"><strong>Natural Language</strong>เข้าใจไทยและอังกฤษ</div></div>
+          <div class="step-item" style="padding:12px 14px"><div class="step-num">🗺️</div><div class="step-txt" style="font-size:13px"><strong>Smart Navigation</strong>แผนที่ + QR ส่งมือถือ</div></div>
+          <div class="step-item" style="padding:12px 14px"><div class="step-num">📊</div><div class="step-txt" style="font-size:13px"><strong>Knowledge Base</strong>เชื่อมข้อมูล Phase 1</div></div>
+          <div class="step-item" style="padding:12px 14px"><div class="step-num">👤</div><div class="step-txt" style="font-size:13px"><strong>Auto-Escalation</strong>ส่งต่อพร้อมบริบท</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 6: ANALYTICS ══ -->
+<div class="slide two-col" id="s6">
+  <div class="sidebar">
+    <div>
+      <div class="sb-eyebrow">ระยะที่ 3 · Analytics</div>
+      <div class="sb-title">Executive<br>Dashboard</div>
+      <p class="sb-body">ผู้บริหารเห็นภาพรวมการบริการแบบ Real-Time ตัดสินใจด้วยข้อมูลจริง พัฒนาต่อเนื่อง</p>
+    </div>
+    <div class="sb-pills">
+      <div class="pill"><div class="pn">5+</div><div class="pl">KPIs ที่ติดตาม</div></div>
+      <div class="pill"><div class="pn">Real-Time</div><div class="pl">อัพเดทอัตโนมัติ</div></div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="eyebrow">Analytics Dashboard</div>
+    <div class="section-title">ภาพรวมการให้บริการ (ประมาณการ)</div>
+    <div class="rule"></div>
+    <div class="kpi-grid">
+      <div class="kpi c-gold"><div class="kv" id="d1">—</div><div class="kl">ผู้ใช้บริการ / เดือน</div><div class="kdelta">↑ +18% MoM</div></div>
+      <div class="kpi"><div class="kv" id="d2">—</div><div class="kl">ความพึงพอใจ</div><div class="kdelta">↑ +12%</div></div>
+      <div class="kpi c-blue"><div class="kv" id="d3">—</div><div class="kl">Avg. Response Time</div><div class="kdelta">↓ ลดลง 60%</div></div>
+      <div class="kpi c-green"><div class="kv" id="d4">—</div><div class="kl">AI Resolution Rate</div><div class="kdelta">↑ เกินเป้า</div></div>
+    </div>
+    <div class="dash-row">
+      <div class="dash-block">
+        <div class="db-title">ผู้ใช้บริการรายเดือน</div>
+        <div class="bar-group" id="bars">
+          <div class="bar-col"><div class="bar-fill" style="height:0%;background:var(--ink)" data-h="43"><div class="btip">2.1K</div></div><div class="bar-lbl">ม.ค.</div></div>
+          <div class="bar-col"><div class="bar-fill" style="height:0%;background:var(--ink)" data-h="58"><div class="btip">2.8K</div></div><div class="bar-lbl">ก.พ.</div></div>
+          <div class="bar-col"><div class="bar-fill" style="height:0%;background:var(--ink)" data-h="72"><div class="btip">3.5K</div></div><div class="bar-lbl">มี.ค.</div></div>
+          <div class="bar-col"><div class="bar-fill" style="height:0%;background:var(--ink)" data-h="66"><div class="btip">3.2K</div></div><div class="bar-lbl">เม.ย.</div></div>
+          <div class="bar-col"><div class="bar-fill" style="height:0%;background:var(--ink)" data-h="85"><div class="btip">4.1K</div></div><div class="bar-lbl">พ.ค.</div></div>
+          <div class="bar-col"><div class="bar-fill" style="height:0%;background:var(--gold)" data-h="100"><div class="btip">4.8K</div></div><div class="bar-lbl">มิ.ย.</div></div>
+        </div>
+      </div>
+      <div class="dash-block">
+        <div class="db-title">Top 5 คำถามที่พบบ่อย</div>
+        <div>
+          <div class="faq-item"><div class="fq-rk">1</div><div class="fq-lbl">สมัครปริญญาตรี</div><div class="fq-track"><div class="fq-fill" id="f1"></div></div><div class="fq-pct">82%</div></div>
+          <div class="faq-item"><div class="fq-rk">2</div><div class="fq-lbl">ตารางเรียน/สอบ</div><div class="fq-track"><div class="fq-fill" id="f2" style="background:var(--blue)"></div></div><div class="fq-pct" style="color:var(--blue)">71%</div></div>
+          <div class="faq-item"><div class="fq-rk">3</div><div class="fq-lbl">ค่าธรรมเนียม</div><div class="fq-track"><div class="fq-fill" id="f3"></div></div><div class="fq-pct">58%</div></div>
+          <div class="faq-item"><div class="fq-rk">4</div><div class="fq-lbl">ทุนการศึกษา</div><div class="fq-track"><div class="fq-fill" id="f4" style="background:var(--blue)"></div></div><div class="fq-pct" style="color:var(--blue)">45%</div></div>
+          <div class="faq-item"><div class="fq-rk">5</div><div class="fq-lbl">ที่พักนักศึกษา</div><div class="fq-track"><div class="fq-fill" id="f5"></div></div><div class="fq-pct">37%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 7: BUDGET & ROI ══ -->
+<div class="slide two-col" id="s7">
+  <div class="sidebar">
+    <div>
+      <div class="sb-eyebrow">Budget &amp; ROI</div>
+      <div class="sb-title">ลงทุน<br>เท่าไหร่?<br>คืนทุน<br>เมื่อไหร่?</div>
+      <p class="sb-body">ตัวเลขอ้างอิงราคาตลาดจริง คำนวณจาก นักศึกษาเพิ่ม 1% × กำไร ฿20,000/หัว × 6,000 คน</p>
+    </div>
+    <div class="sb-pills">
+      <div class="pill"><div class="pn" id="roi-pct">111%</div><div class="pl">ROI ปีแรก</div></div>
+      <div class="pill"><div class="pn" id="payback-mo">5.7 เดือน</div><div class="pl">ระยะคืนทุน</div></div>
+    </div>
+  </div>
+  <div class="main" style="overflow-y:auto;padding-top:44px;padding-bottom:80px">
+    <div class="eyebrow">Budget Estimation &amp; ROI Calculator</div>
+    <div class="section-title">ต้นทุน · ผลตอบแทน · ระยะคืนทุน</div>
+    <div class="rule"></div>
+    <div class="cost-tbl">
+      <div class="tbl-hdr"><div>รายการ</div><div style="text-align:right">จำนวน</div><div style="text-align:right">ราคา/หน่วย</div><div style="text-align:right">รวม (฿)</div></div>
+      <div class="tbl-row"><div class="tr-name">🖥️ Smart Kiosk (จอ 32" + ตู้ + ซอฟต์แวร์)</div><div class="tr-qty"><input type="number" id="qk" value="3" min="1" max="20" style="width:52px;text-align:center;border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-family:var(--font);font-size:12px;outline:none" oninput="calcROI()"></div><div class="tr-unit">80,000</div><div class="tr-total" id="tk">240,000</div></div>
+      <div class="tbl-row"><div class="tr-name">🍎 Mac mini M4 Pro (Agentic AI Station)</div><div class="tr-qty"><input type="number" id="qm" value="2" min="1" max="10" style="width:52px;text-align:center;border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-family:var(--font);font-size:12px;outline:none" oninput="calcROI()"></div><div class="tr-unit">55,900</div><div class="tr-total" id="tm">111,800</div></div>
+      <div class="tbl-row"><div class="tr-name">☁️ API &amp; Cloud (LLM + hosting + storage / ปี)</div><div class="tr-qty" style="color:var(--ink3);font-size:12px;text-align:right">1 ปี</div><div class="tr-unit">96,000</div><div class="tr-total">96,000</div></div>
+      <div class="tbl-row"><div class="tr-name">🔧 Integration &amp; Setup (ติดตั้ง เชื่อมระบบ)</div><div class="tr-qty" style="color:var(--ink3);font-size:12px;text-align:right">ครั้งเดียว</div><div class="tr-unit">120,000</div><div class="tr-total">120,000</div></div>
+      <div class="tbl-row free-row"><div class="tr-name free-name">✅ อบรมบุคลากร (Hospitality · AI · Script)</div><div class="tr-qty" style="color:var(--ink3);font-size:12px;text-align:right">ทุกคน</div><div class="tr-unit free">ฟรี</div><div class="tr-total free">—</div></div>
+      <div class="tbl-row free-row"><div class="tr-name free-name">✅ Service Information Hub (ทีมงานภายใน)</div><div class="tr-qty" style="color:var(--ink3);font-size:12px;text-align:right">ภายใน</div><div class="tr-unit free">ฟรี</div><div class="tr-total free">—</div></div>
+      <div class="tbl-foot"><div style="font-size:14px;font-weight:800;color:var(--ink)">รวมต้นทุนทั้งหมด</div><div></div><div></div><div style="font-size:16px;font-weight:900;color:var(--gold);text-align:right" id="tc">567,800</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="sliders-box">
+        <div class="sl-title">ปรับสมมติฐาน</div>
+        <div class="sl-row"><div class="sl-label">นักศึกษาปัจจุบัน<span class="sl-val" id="sv-s">6,000 คน</span></div><input type="range" class="sl" id="sl-s" min="4000" max="12000" step="500" value="6000" oninput="updSl('s')"></div>
+        <div class="sl-row"><div class="sl-label">กำไรเฉลี่ย / หัว<span class="sl-val" id="sv-m">฿20,000</span></div><input type="range" class="sl" id="sl-m" min="10000" max="40000" step="1000" value="20000" oninput="updSl('m')"></div>
+        <div class="sl-row"><div class="sl-label">นักศึกษาเพิ่มขึ้น (%)<span class="sl-val" id="sv-g">1.0%</span></div><input type="range" class="sl" id="sl-g" min="0.5" max="5" step="0.5" value="1" oninput="updSl('g')"></div>
+        <div class="sl-row" style="margin-bottom:0"><div class="sl-label">Kiosk จำนวน<span class="sl-val" id="sv-k">3 เครื่อง</span></div><input type="range" class="sl" id="sl-k" min="1" max="10" step="1" value="3" oninput="updSl('k')"></div>
+      </div>
+      <div class="roi-card">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3)">ผลตอบแทน</div>
+        <div class="roi-line"><div class="rl-lbl">นักศึกษาที่เพิ่มขึ้น</div><div class="rl-val green" id="rv-n">+60 คน</div></div>
+        <div class="roi-line"><div class="rl-lbl">รายได้เพิ่มต่อปี</div><div class="rl-val gold" id="rv-r">฿1,200,000</div></div>
+        <div class="roi-line"><div class="rl-lbl">ต้นทุนรวมโครงการ</div><div class="rl-val" id="rv-c">฿567,800</div></div>
+        <div class="divider-thin"></div>
+        <div class="roi-line"><div class="rl-lbl bold">กำไรสุทธิปีแรก</div><div class="rl-val gold big" id="rv-p">฿632,200</div></div>
+        <div class="roi-line"><div class="rl-lbl bold">ROI ปีแรก</div><div class="rl-val green big" id="rv-roi">111%</div></div>
+        <div>
+          <div class="pb-label"><span>ระยะคืนทุน</span><span id="rv-pb" style="font-weight:800;color:var(--gold)">5.7 เดือน</span></div>
+          <div class="pb-track"><div class="pb-fill" id="pb-fill" style="width:48%"></div></div>
+          <div class="pb-ticks"><span>0</span><span>6 เดือน</span><span>12 เดือน</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 8: SUCCESS ══ -->
+<div class="slide two-col" id="s8">
+  <div class="sidebar">
+    <div>
+      <div class="sb-eyebrow">Step 05 · ความสำเร็จ</div>
+      <div class="sb-title">Smart<br>Service<br>University</div>
+      <p class="sb-body">เมื่อ UTCC X สมบูรณ์ ทุกคนที่มาติดต่อจะได้รับประสบการณ์ที่ดีที่สุด</p>
+    </div>
+    <div class="sb-pills">
+      <div style="display:inline-flex;align-items:center;gap:16px;background:var(--gold-bg);border:1px solid rgba(200,147,42,.22);border-radius:16px;padding:16px 22px">
+        <div style="font-family:var(--serif);font-size:3rem;color:var(--gold);line-height:1">X²</div>
+        <div><div style="font-size:15px;font-weight:800;color:var(--ink)">ประสบการณ์ทวีคูณ</div><div style="font-size:12px;color:var(--ink2);margin-top:2px">3 ระยะ · 24 เดือน · ROI 111%</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="eyebrow">เป้าหมายความสำเร็จ</div>
+    <div class="section-title">5 ผลลัพธ์ที่จะเกิดขึ้น</div>
+    <div class="rule"></div>
+    <div class="sc-cards stagger">
+      <div class="sc-card"><div class="sc-icon">🏛️</div><div class="sc-title">Smart Service University</div><div class="sc-body">มาตรฐานบริการระดับโลก เทียบเท่า Smart Airport</div></div>
+      <div class="sc-card"><div class="sc-icon">⭐</div><div class="sc-title">Excellent Experience</div><div class="sc-body">ประสบการณ์ที่เป็นเลิศในทุก touchpoint</div></div>
+      <div class="sc-card"><div class="sc-icon">⚙️</div><div class="sc-title">ประสิทธิภาพองค์กร</div><div class="sc-body">ลดต้นทุน เพิ่มผลลัพธ์ ตัดสินใจด้วยข้อมูลจริง</div></div>
+      <div class="sc-card"><div class="sc-icon">🏆</div><div class="sc-title">ภาพลักษณ์ที่แข่งขันได้</div><div class="sc-body">UTCC ผู้นำมหาวิทยาลัยดิจิทัลระดับประเทศ</div></div>
+      <div class="sc-card"><div class="sc-icon">📊</div><div class="sc-title">Data-Driven University</div><div class="sc-body">ขับเคลื่อนองค์กรด้วย Analytics และข้อมูลจริง</div></div>
+      <div class="sc-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;border-style:dashed;gap:6px">
+        <div style="font-size:12px;color:var(--ink3);text-align:center;line-height:1.7">เริ่มต้นด้วย<br><strong style="color:var(--gold)">Smart Service Foundation</strong></div>
+        <button onclick="goTo(0)" style="margin-top:8px;padding:9px 20px;background:var(--ink);color:#fff;border:none;border-radius:100px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer">↩ กลับหน้าแรก</button>
+      </div>
+    </div>
+    <!-- Summary strip -->
+    <div style="display:flex;align-items:center;gap:28px;margin-top:14px;padding:14px 22px;background:var(--surface);border:1px solid var(--line);border-radius:100px;flex-wrap:wrap">
+      <div style="font-size:13.5px;font-weight:800;color:var(--ink)">📌 3 ระยะดำเนินการ</div>
+      <div style="width:1px;height:18px;background:var(--line)"></div>
+      <div style="font-size:13.5px;font-weight:800;color:var(--ink)">⏱ 24 เดือนสู่เป้าหมาย</div>
+      <div style="width:1px;height:18px;background:var(--line)"></div>
+      <div style="font-size:13.5px;font-weight:800;color:var(--gold)">💰 ROI 111% ปีแรก</div>
+      <div style="width:1px;height:18px;background:var(--line)"></div>
+      <div style="font-size:13.5px;font-weight:800;color:var(--gold)">⚡ คืนทุนใน 5.7 เดือน</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- Nav -->
+<div id="nav">
+  <button class="nav-btn" onclick="go(-1)">‹</button>
+  <div id="nd-row" style="display:flex;gap:8px"></div>
+  <span id="nav-ctr">1 / 9</span>
+  <button class="nav-btn" onclick="go(1)">›</button>
+</div>
+
+<script>
+// ── SLIDE ENGINE ──
+const slides=document.querySelectorAll('.slide'), N=slides.length;
+let cur=0;
+const ndRow=document.getElementById('nd-row');
+slides.forEach((_,i)=>{
+  const d=document.createElement('div');d.className='nd'+(i===0?' on':'');
+  d.onclick=()=>goTo(i);ndRow.appendChild(d);
+});
+function updateUI(){
+  document.querySelectorAll('.nd').forEach((d,i)=>d.classList.toggle('on',i===cur));
+  document.getElementById('nav-ctr').textContent=(cur+1)+' / '+N;
+  document.getElementById('prog').style.width=(cur/(N-1)*100)+'%';
+}
+function goTo(n){
+  if(n<0||n>=N||n===cur)return;
+  const fwd=n>cur,from=slides[cur],to=slides[n];
+  from.classList.remove('go-fwd','go-back');to.classList.remove('out-fwd','out-back');
+  from.classList.add(fwd?'out-fwd':'out-back');from.classList.remove('active');from.classList.add('prev');
+  to.classList.add('active',fwd?'go-fwd':'go-back');
+  cur=n;updateUI();
+  if(n===6)initDash();if(n===7)calcROI();
+  setTimeout(()=>{from.classList.remove('prev','out-fwd','out-back');to.classList.remove('go-fwd','go-back')},550);
+}
+function go(d){goTo(cur+d)}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' ')go(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1);
+  if(e.key==='Escape')goTo(0);
+});
+let tx=0;
+document.addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)go(dx<0?1:-1)});
+updateUI();
+
+// ── COUNTER ──
+let cntDone=false;
+function runCnt(){
+  if(cntDone)return;cntDone=true;
+  const el=document.getElementById('cnt');let v=0;
+  const iv=setInterval(()=>{v=Math.min(v+Math.ceil((12480-v)/18)+8,12480);el.textContent=v.toLocaleString('th-TH');if(v>=12480)clearInterval(iv)},16);
+}
+
+// ── PHASE TABS ──
+function setPhase(i,btn){
+  document.querySelectorAll('.ph-content').forEach((p,j)=>p.classList.toggle('on',j===i));
+  if(btn){document.querySelectorAll('.ph-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+  else document.querySelectorAll('.ph-btn').forEach((b,j)=>b.classList.toggle('on',j===i));
+}
+function tlOn(i){document.querySelectorAll('.tl-seg').forEach((s,j)=>s.classList.toggle('tl-on',j===i))}
+
+// ── KIOSK ──
+const kData={
+  map:{t:'🗺️ แผนที่ UTCC',b:'<strong>อาคารหลัก:</strong><br>• อาคาร 1 – สำนักทะเบียน, คณะบริหาร<br>• อาคาร 2 – วิทยาศาสตร์, วิศวกรรม<br>• อาคาร 3 – ห้องสมุด, ศูนย์ภาษา<br>• Sport Complex – หอประชุม'},
+  enroll:{t:'📚 สมัครเรียน UTCC',b:'<strong>รอบรับสมัคร 2568:</strong><br>• Portfolio: ม.ค.–ก.พ.<br>• โควตา: มี.ค.–เม.ย.<br>• Admission: พ.ค.–มิ.ย.<br>📞 ต่อ 1234'},
+  contact:{t:'📞 ติดต่อหน่วยงาน',b:'• สำนักทะเบียน: ต่อ 1001<br>• การเงิน: ต่อ 1050<br>• บัณฑิต: ต่อ 2001<br>• กิจการนักศึกษา: ต่อ 3001<br>• IT: ต่อ 4001'},
+  faq:{t:'❓ FAQ คำถามพบบ่อย',b:'• ค่าเทอม → finance.utcc.ac.th<br>• ลืมรหัส → IT ต่อ 4001<br>• Transcript → ทะเบียน ต่อ 1001'},
+  student:{t:'🎓 บริการนักศึกษา',b:'• ทุนการศึกษาและ กยศ<br>• กิจกรรมและชมรม 50+<br>• Career Center<br>• คลีนิกสุขภาพ'},
+  online:{t:'🌐 ระบบออนไลน์',b:'• portal.utcc.ac.th<br>• e-learning.utcc.ac.th<br>• library.utcc.ac.th'}
+};
+const kQA={'สมัครเรียน':'มีหลายรอบครับ\n• Portfolio: ม.ค.–ก.พ.\n• โควตา: มี.ค.–เม.ย.\n• Admission: พ.ค.–มิ.ย.','ค่าเทอม':'ขึ้นกับคณะครับ\n• บริหาร: 25,000–35,000/เทอม\n• วิทย์: 28,000–40,000/เทอม','แผนที่':'อาคาร 1 (บริหาร) · อาคาร 2 (วิทย์) · อาคาร 3 (ห้องสมุด)','ทุน':'• ทุนเรียนดี (GPA 3.5+)\n• ทุนกีฬา/กิจกรรม\n• กยศ และ กรอ.','ลืมรหัส':'รีเซ็ตที่:\n1. portal.utcc.ac.th → ลืมรหัส\n2. IT Helpdesk ต่อ 4001'};
+function kSel(t,el){document.querySelectorAll('.kd-tile').forEach(k=>k.classList.remove('sel'));el.classList.add('sel');const d=kData[t],r=document.getElementById('kdr');r.innerHTML=`<h4>${d.t}</h4>${d.b}`;r.classList.add('show');numUp('ks1',87,'');numUp('ks2',94,'%');}
+function kChat(){const i=document.getElementById('kdi'),q=i.value.trim();if(!q)return;i.value='';let a='ไม่พบข้อมูล กรุณาเลือกเมนู หรือโทร 02-697-6000';for(const k in kQA)if(q.includes(k)){a=kQA[k];break}const r=document.getElementById('kdr');r.innerHTML=`<h4>🔍 "${q}"</h4>${a.replace(/\n/g,'<br>')}`;r.classList.add('show');}
+
+// ── AI CHAT ──
+const aiR={'สมัครเรียน':'ยินดีช่วยครับ 🎓\nมีหลายรอบ:\n• Portfolio (ม.ค.–ก.พ.)\n• โควตา (มี.ค.–เม.ย.)\n• Admission (พ.ค.–มิ.ย.)\n\nสนใจคณะไหนครับ?','ค่าเทอม':'ขึ้นกับคณะครับ\n• บริหาร: ~25,000–35,000/เทอม\n• วิทย์/วิศวะ: ~28,000–40,000/เทอม\n\nดูที่ finance.utcc.ac.th','ทุน':'UTCC มีทุนหลายประเภทครับ\n• ทุนเรียนดี (GPA 3.5+)\n• ทุนกีฬาและกิจกรรม\n• กยศ และ กรอ.\n\nติดต่อ: กิจการฯ ต่อ 3001','ห้องสมุด':'ห้องสมุด UTCC (อาคาร 3) เปิด\n• จ.–ศ.: 8:00–20:00 น.\n• ส.–อา.: 9:00–17:00 น.\n\nlibrary.utcc.ac.th','ลืมรหัส':'รีเซ็ตได้เลยครับ\n1. portal.utcc.ac.th → ลืมรหัส\n2. IT Helpdesk ต่อ 4001\n3. อาคาร 2 ชั้น 1','mba':'MBA ที่ UTCC มีหลายแขนงครับ\n• การตลาด, การเงิน, ธุรกิจระหว่างประเทศ\nเรียน 2 ปี ทั้งภาคปกติและพิเศษ\n\nบัณฑิตวิทยาลัย ต่อ 2001','ที่จอดรถ':'ที่จอดรถ UTCC\n• อาคารจอดหลัก: หน้าอาคาร 1\n• ลาน B: หลัง Sport Complex\n\nเปิด 6:00–22:00 ทุกวัน'};
+function aiResp(q){q=q.toLowerCase();for(const k in aiR)if(q.includes(k.toLowerCase()))return aiR[k];return`ขอบคุณสำหรับคำถามครับ\nกำลังส่งต่อเจ้าหน้าที่...\n\n📞 จะติดต่อกลับภายใน 5 นาทีครับ`;}
+function addMsg(t,r){const msgs=document.getElementById('cwm'),row=document.createElement('div');row.className='msg-row'+(r==='user'?' user':'');const b=document.createElement('div');b.className='bubble '+(r==='user'?'user-b':'bot');b.innerHTML=t.replace(/\n/g,'<br>');row.appendChild(b);msgs.appendChild(row);msgs.scrollTop=msgs.scrollHeight;return b;}
+function aiSend(){const i=document.getElementById('ci'),q=i.value.trim();if(!q)return;i.value='';addMsg(q,'user');const row=document.createElement('div');row.className='msg-row';const t=document.createElement('div');t.className='bubble bot';t.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';row.appendChild(t);document.getElementById('cwm').appendChild(row);document.getElementById('cwm').scrollTop=99999;setTimeout(()=>{row.remove();addMsg(aiResp(q),'bot')},700+Math.random()*500);}
+function aiQ(t){document.getElementById('ci').value=t;aiSend();}
+
+// ── DASHBOARD ──
+let dashDone=false;
+function initDash(){
+  if(dashDone)return;dashDone=true;
+  numUp('d1',4820,'');numUp('d2',91,'%',200);numUp('d3',3,'s',350);numUp('d4',88,'%',500);
+  document.querySelectorAll('.bar-fill').forEach((b,i)=>{const h=b.dataset.h;b.style.transition='none';b.style.height='0%';setTimeout(()=>{b.style.transition='height 0.9s cubic-bezier(.25,1,.5,1)';b.style.height=h+'%'},250+i*80);});
+  [[82,'f1'],[71,'f2'],[58,'f3'],[45,'f4'],[37,'f5']].forEach(([v,id],i)=>{setTimeout(()=>{const el=document.getElementById(id);if(el)el.style.width=v+'%'},350+i*110);});
+}
+
+// ── BUDGET ROI ──
+const fmt=n=>n.toLocaleString('th-TH');
+function calcROI(){
+  const students=parseInt(document.getElementById('sl-s').value)||6000;
+  const margin=parseInt(document.getElementById('sl-m').value)||20000;
+  const growth=parseFloat(document.getElementById('sl-g').value)||1;
+  const qk=parseInt(document.getElementById('qk').value)||3;
+  const qm=parseInt(document.getElementById('qm').value)||2;
+  // sync kiosk slider
+  const slk=document.getElementById('sl-k');if(slk)slk.value=Math.min(qk,10);
+  const sv=document.getElementById('sv-k');if(sv)sv.textContent=qk+' เครื่อง';
+  const kioskCost=qk*80000,macCost=qm*55900,total=kioskCost+macCost+96000+120000;
+  const el=id=>document.getElementById(id);
+  if(el('tk'))el('tk').textContent=fmt(kioskCost);
+  if(el('tm'))el('tm').textContent=fmt(macCost);
+  if(el('tc'))el('tc').textContent=fmt(total);
+  const newS=Math.round(students*growth/100),rev=newS*margin,profit=rev-total,roi=Math.round((profit/total)*100),pb=total/(rev/12);
+  if(el('rv-n'))el('rv-n').textContent='+'+fmt(newS)+' คน';
+  if(el('rv-r'))el('rv-r').textContent='฿'+fmt(rev);
+  if(el('rv-c'))el('rv-c').textContent='฿'+fmt(total);
+  if(el('rv-p'))el('rv-p').textContent='฿'+fmt(profit);
+  if(el('rv-roi'))el('rv-roi').textContent=roi+'%';
+  if(el('rv-pb'))el('rv-pb').textContent=pb.toFixed(1)+' เดือน';
+  if(el('pb-fill'))el('pb-fill').style.width=Math.min(100,(pb/12)*100)+'%';
+  if(el('roi-pct'))el('roi-pct').textContent=roi+'%';
+  if(el('payback-mo'))el('payback-mo').textContent=pb.toFixed(1)+' เดือน';
+}
+function updSl(k){
+  const map={s:{id:'sl-s',sv:'sv-s',f:v=>fmt(v)+' คน'},m:{id:'sl-m',sv:'sv-m',f:v=>'฿'+fmt(v)},g:{id:'sl-g',sv:'sv-g',f:v=>v+'%'},k:{id:'sl-k',sv:'sv-k',f:v=>v+' เครื่อง'}};
+  const mp=map[k];if(!mp)return;const v=document.getElementById(mp.id).value;
+  const sv=document.getElementById(mp.sv);if(sv)sv.textContent=mp.f(v);
+  if(k==='k'){const qi=document.getElementById('qk');if(qi)qi.value=v;}
+  calcROI();
+}
+
+// ── UTIL ──
+function numUp(id,target,sfx='',delay=0){setTimeout(()=>{const el=document.getElementById(id);if(!el)return;let v=0;const iv=setInterval(()=>{v=Math.min(v+Math.ceil((target-v)/20)+1,target);el.textContent=v.toLocaleString('th-TH')+sfx;if(v>=target)clearInterval(iv)},20)},delay);}
+</script>
+</body>
+</html>
